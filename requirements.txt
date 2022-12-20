@@ -6,4 +6,3 @@ plotly==5.11.0
 scikit_surprise==1.1.3
 streamlit==1.16.0
 surprise==0.1
-~treamlit==1.16.0
