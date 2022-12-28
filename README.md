@@ -2,6 +2,7 @@
 
 ```
 $ git clone https://github.com/d901203/Streamlit-Recommend-System
+$ cd Streamlit-Recommend-System
 $ pip install -r requirements.txt
 $ streamlit run main.py
 ```
