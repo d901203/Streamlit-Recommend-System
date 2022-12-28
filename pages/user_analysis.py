@@ -7,9 +7,8 @@ import numpy as np
 import pgeocode
 from matplotlib.ticker import MaxNLocator
 
-st.title("影迷 👨‍💻 (943人)")
+st.title("影評者 (943人)")
 
-path = 'ml-100k/u.user'
 path = 'ml-100k/u.user'
 header = ['user_id', 'age', 'gender', 'occupation', 'zip_code']
 user = pd.read_csv(path, sep='|', names=header)

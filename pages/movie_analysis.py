@@ -6,7 +6,7 @@ import plotly.graph_objects as go
 from matplotlib.ticker import MaxNLocator
 from collections import Counter
 
-st.title("電影 🎥 (1682部)")
+st.title("電影 (1682部)")
 
 path = 'ml-100k/u.genre'
 genre = [g[0] for g in pd.read_csv(path, sep='|', header=None).values]

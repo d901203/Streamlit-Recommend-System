@@ -4,10 +4,11 @@ from surprise import *
 from surprise.model_selection import *
 
 st.title('電影推薦 (SVD)')
+st.info('1. 利用 SVD 先對 u.data 進行訓練\n2. 生成 u.data 裡面沒有的 anti_data 進行評分預測\n3. 依照評分預測結果推薦電影給使用者\n')
 
 def get_top_n(predictions, user_id, n=10):
     top_n = []
-    for uid, iid, true_r, est, _ in predictions:
+    for uid, iid, _, est, _ in predictions:
         if uid == user_id:
             top_n.append((iid, est))
     top_n.sort(key=lambda x: x[1], reverse=True)
