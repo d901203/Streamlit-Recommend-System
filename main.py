@@ -1,6 +1,22 @@
 import streamlit as st
 
-st.title('推薦系統 Final Project')
-st.info('410921231 資工三 曾子丞\n\n410921252 資工三 呂金寶\n')
+st.title("MovieLens Recommend System")
+st.markdown(
+    """
+## Requirements
+* python 3.10 or later
+* streamlit
+* numpy
+* pandas
+* pgeocode
+* matplotlib
+* plotly
+* scikit_surprise
 
-st.info('Requirements List :\n\n資料來源 : MovieLens 100k\n\n網頁呈現 : Streamlit\n\n資料處理 : numpy、pandas、pgeocode\n\n圖表工具 : matplotlib、plotly\n\n推薦系統 : scikit_surprise\n\n')
+## Installation
+1. Clone the repository: `git clone https://github.com/d901203/movielens-recommend-system.git`
+2. Navigate to the project directory: `cd movielens-recommend-system`
+3. Install the required packages: `pip install -r requirements.txt`
+4. Run the app: `streamlit run main.py`
+"""
+)
