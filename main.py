@@ -3,6 +3,20 @@ import streamlit as st
 st.title("MovieLens Recommend System")
 st.markdown(
     """
+This is a movie recommendation system based on the MovieLens dataset.
+The system uses the Singular Value Decomposition (SVD) algorithm to predict the ratings of unseen movies for each user.
+The predicted ratings are then used to recommend movies to users.
+
+## Features
+* Movie analysis (Data analysis)
+* User analysis (Data analysis)
+* Top K Most Similar Movies (Item-base) (KNN)
+* Top K Most Similar Users (User-based) (KNN)
+* Movie Recommendation (SVD)
+
+## Online Demo
+You can access a live demo of the app at [Streamlit Cloud](https://movielens-recommend-system.streamlit.app/).
+
 ## Requirements
 * python 3.10 or later
 * streamlit
