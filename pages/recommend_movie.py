@@ -22,7 +22,7 @@ def get_top_n(predictions, user_id, n=10):
 
 
 def get_data():
-    data = Dataset.load_builtin("ml-100k")
+    data = Dataset.load_builtin("ml-100k", prompt=False)
     trainset = data.build_full_trainset()
     algo = SVD()
     algo.fit(trainset)

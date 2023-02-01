@@ -32,7 +32,7 @@ elif knn == "KNNWithZScore":
 elif knn == "KNNBaseline":
     algo = KNNBaseline(sim_options={"name": sim})
 
-data = Dataset.load_builtin("ml-100k")
+data = Dataset.load_builtin("ml-100k", prompt=False)
 
 if cv_bool:
     cv = KFold(n_splits=int(split_num))
