@@ -24,6 +24,9 @@ You can access a live demo of the app at [Streamlit Cloud](https://movielens-rec
 * matplotlib
 * plotly
 * scikit_surprise
+* beautifulsoup4
+* requests
+* lxml
 
 ## Installation
 
