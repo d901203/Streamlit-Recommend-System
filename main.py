@@ -5,6 +5,7 @@ st.markdown("""
 This is a movie recommendation system based on the MovieLens dataset. The system uses the Singular Value Decomposition (SVD) algorithm to predict the ratings of unseen movies for each user. The predicted ratings are then used to recommend movies to users.
 
 ## Features
+* Random IMDB Top 250 movies (Web scraping)
 * Movie analysis (Data analysis)
 * User analysis (Data analysis)
 * Top K Most Similar Movies (Item-base) (KNN)
