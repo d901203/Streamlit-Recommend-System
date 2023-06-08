@@ -42,9 +42,9 @@ movie["rating_count"] = rating.groupby("item_id")["rating"].count().reset_index(
 tabs = st.tabs(
     [
         "Number of movies released per year",
-        "Rating",
-        "Number of ratings",
         "Genre",
+        "Number of ratings",
+        "Rating",
         "Genre average rating",
     ]
 )
