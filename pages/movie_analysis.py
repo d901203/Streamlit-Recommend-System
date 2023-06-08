@@ -1,13 +1,16 @@
-import streamlit as st
-import pandas as pd
-import matplotlib.pyplot as plt
-import numpy as np
-import plotly.graph_objects as go
-from matplotlib.ticker import MaxNLocator
 from collections import Counter
 
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import plotly.graph_objects as go
+import streamlit as st
+from matplotlib.ticker import MaxNLocator
+
+# Display the title
 st.title("Movies")
 
+# Load the data
 path = "ml-100k/u.genre"
 genre = [g[0] for g in pd.read_csv(path, sep="|", header=None).values]
 
@@ -33,10 +36,9 @@ header = [
 movie = pd.read_csv(path, sep="|", names=header, encoding="latin-1")
 movie["release_date"] = pd.to_datetime(movie["release_date"])
 movie["avg_rating"] = avg_rating
-movie["rating_count"] = (
-    rating.groupby("item_id")["rating"].count().reset_index(drop=True)
-)
+movie["rating_count"] = rating.groupby("item_id")["rating"].count().reset_index(drop=True)
 
+# Display the data
 tabs = st.tabs(
     [
         "Number of movies released per year",
@@ -64,19 +66,13 @@ with tabs[1]:
     st.plotly_chart(fig)
 
 with tabs[2]:
-    fig = go.Figure(
-        data=[go.Histogram(x=movie["avg_rating"], texttemplate="%{y}")]
-    )
+    fig = go.Figure(data=[go.Histogram(x=movie["avg_rating"], texttemplate="%{y}")])
     fig.update_layout(xaxis_title="Rating", yaxis_title="Number of movies")
     st.plotly_chart(fig)
 
 with tabs[3]:
-    fig = go.Figure(
-        data=[go.Histogram(x=movie["rating_count"], texttemplate="%{y}")]
-    )
-    fig.update_layout(
-        xaxis_title="Rating count", yaxis_title="Number of movies"
-    )
+    fig = go.Figure(data=[go.Histogram(x=movie["rating_count"], texttemplate="%{y}")])
+    fig.update_layout(xaxis_title="Rating count", yaxis_title="Number of movies")
     st.plotly_chart(fig)
 
 with tabs[4]:
@@ -103,24 +99,16 @@ st.write("released year : ", range[0], " ~ ", range[1])
 
 genre_options = st.multiselect("Genre", genre)
 rating_options = st.slider("Rating", 1, 5, (2, 3))
-st.write(
-    "Rating range : ", rating_options[0], "point ~ ", rating_options[1], "point"
-)
+st.write("Rating range : ", rating_options[0], "point ~ ", rating_options[1], "point")
 
 for g in genre_options:
     movie = movie[movie[g] == 1]
 movie = movie[
     (movie["release_date"].isnull())
-    | (
-        (movie["release_date"].dt.year >= range[0])
-        & (movie["release_date"].dt.year <= range[1])
-    )
+    | ((movie["release_date"].dt.year >= range[0]) & (movie["release_date"].dt.year <= range[1]))
 ]
 movie["release_date"] = movie["release_date"].dt.date
-movie = movie[
-    (movie["avg_rating"] >= rating_options[0])
-    & (movie["avg_rating"] <= rating_options[1])
-]
+movie = movie[(movie["avg_rating"] >= rating_options[0]) & (movie["avg_rating"] <= rating_options[1])]
 st.write("Found ", len(movie), " movies")
 
 option = st.selectbox(
@@ -153,13 +141,8 @@ for i, row in movie.iterrows():
     container = st.container()
     container.title(f"{row['movie_title']}")
     container.markdown(f"Released date : {row['release_date']}")
-    container.markdown(
-        f"Genre : {', '.join([g for g in genre if row[g] == 1])}"
-    )
-    container.markdown(
-        f"Average rating : {row['avg_rating']:0.2f} (Number of ratings :"
-        f" {row['rating_count']})"
-    )
+    container.markdown(f"Genre : {', '.join([g for g in genre if row[g] == 1])}")
+    container.markdown(f"Average rating : {row['avg_rating']:0.2f} (Number of ratings : {row['rating_count']})")
     expander = container.expander("More")
     tabs = expander.tabs(
         [
@@ -188,10 +171,7 @@ for i, row in movie.iterrows():
         year = list(sorted(year))
         y = [0] * len(year)
         for i, x in enumerate(year):
-            val = rating[
-                (rating["item_id"] == row["item_id"])
-                & (rating["timestamp"].dt.year == x)
-            ]["rating"].mean()
+            val = rating[(rating["item_id"] == row["item_id"]) & (rating["timestamp"].dt.year == x)]["rating"].mean()
             y[i] = val if not np.isnan(val) else 0
 
         fig, ax = plt.subplots()

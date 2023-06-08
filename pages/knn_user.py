@@ -1,12 +1,14 @@
-import streamlit as st
 import pandas as pd
+import streamlit as st
 from surprise import *
-from surprise.model_selection import *
 from surprise import accuracy
+from surprise.model_selection import *
 
+# Display the title
 st.markdown("# Top K Most Similar Users")
 st.markdown("## (User-based) (KNN)")
 
+# Display the user input features
 knn = st.selectbox(
     "KNN Algorithms",
     ["KNNBasic", "KNNWithMeans", "KNNWithZScore", "KNNBaseline"],
@@ -57,6 +59,7 @@ path = "ml-100k/u.user"
 header = ["user_id", "age", "gender", "occupation", "zip_code"]
 df = pd.read_csv(path, sep="|", names=header)
 
+# Display the data
 st.markdown(f"### TOP {number} Most Similar Users to No.{user_id}")
 df_copy = df.copy()
 df_copy = df_copy[df_copy["user_id"] == int(user_id)]

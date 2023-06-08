@@ -1,15 +1,14 @@
-import streamlit as st
 import pandas as pd
+import streamlit as st
 from surprise import *
 from surprise.model_selection import *
 
+# Display the title
 st.title("Movie Recommendation (SVD)")
-st.info(
-    """
+st.info("""
     1. Train on u.data using SVD.
     2. Generate anti-data for missing ratings in u.data for prediction.
-    3. Recommend movies to the user based on predicted ratings."""
-)
+    3. Recommend movies to the user based on predicted ratings.""")
 
 
 def get_top_n(predictions, user_id, n=10):
@@ -31,11 +30,11 @@ def get_data():
     return predictions
 
 
+# Display the user input features
 user_id = st.text_input("Input user id (1 ~ 943)", "196")
-num_movies = st.text_input(
-    "Input number of recommended movies (1 ~ 1682)", "10"
-)
+num_movies = st.text_input("Input number of recommended movies (1 ~ 1682)", "10")
 
+# Load the data
 predictions = get_data()
 top_n = get_top_n(predictions, user_id, n=int(num_movies))
 
@@ -55,19 +54,14 @@ df = pd.read_csv(path, sep="|", names=header, encoding="latin-1")
 df["release_date"] = pd.to_datetime(df["release_date"])
 df["release_date"] = df["release_date"].dt.date
 
-st.write(
-    "The top", num_movies, "movie recommendations for user", user_id, "are:"
-)
+# Display the data
+st.write("The top", num_movies, "movie recommendations for user", user_id, "are:")
 movie_name = []
 realease_year = []
 pred_rating = []
 for movie_id, rating in top_n:
-    movie_name.append(
-        df[df["item_id"] == int(movie_id)]["movie_title"].values[0]
-    )
-    realease_year.append(
-        df[df["item_id"] == int(movie_id)]["release_date"].values[0]
-    )
+    movie_name.append(df[df["item_id"] == int(movie_id)]["movie_title"].values[0])
+    realease_year.append(df[df["item_id"] == int(movie_id)]["release_date"].values[0])
     pred_rating.append(rating)
 df = pd.DataFrame(
     {

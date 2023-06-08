@@ -1,25 +1,32 @@
-import streamlit as st
 import pandas as pd
+import streamlit as st
 from surprise import *
-from surprise.model_selection import *
 from surprise import accuracy
+from surprise.model_selection import *
 
+# Display the title
 st.markdown("# Top K Most Similar Movies")
 st.markdown("## (Item-base) (KNN)")
 
 
+# Load the data
 def get_movie_id():
+    # Read the mapping raw id <-> movie name
     file_name = "ml-100k/u.item"
     rid_to_name = {}
     name_to_rid = {}
+    # Read the file line by line
     with open(file_name, encoding="latin-1") as f:
+        # u.item delimiter "|"
         for line in f:
+            # First split at "|" to get the raw id and movie name
             line = line.split("|")
             rid_to_name[line[0]] = line[1]
             name_to_rid[line[1]] = line[0]
     return rid_to_name, name_to_rid
 
 
+# Get the raw id <-> movie name mapping
 raw_id_to_name, name_to_raw_id = get_movie_id()
 knn = st.selectbox(
     "KNN Algorithms",
@@ -34,9 +41,7 @@ sim = st.selectbox(
 cv_bool = st.checkbox("Enable Cross-validation")
 if cv_bool:
     split_num = st.text_input("Number of subset", "3")
-movie_name = st.selectbox(
-    "Input the movie name", list(raw_id_to_name.values())
-)
+movie_name = st.selectbox("Input the movie name", list(raw_id_to_name.values()))
 number = st.text_input("Top K", "10")
 
 if knn == "KNNBasic":

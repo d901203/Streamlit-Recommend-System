@@ -1,14 +1,16 @@
-import streamlit as st
-import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import pgeocode
 import plotly.express as px
 import plotly.graph_objects as go
-import numpy as np
-import pgeocode
+import streamlit as st
 from matplotlib.ticker import MaxNLocator
 
+# Display the title
 st.title("Users")
 
+# Load the data
 path = "ml-100k/u.user"
 header = ["user_id", "age", "gender", "occupation", "zip_code"]
 user = pd.read_csv(path, sep="|", names=header)
@@ -22,12 +24,8 @@ rating = pd.read_csv(path, sep="\t", names=header)
 rating["timestamp"] = pd.to_datetime(rating["timestamp"], unit="s")
 year = set(rating["timestamp"].dt.year)
 year = list(sorted(year))
-user["avg_rating"] = (
-    rating.groupby("user_id")["rating"].mean().reset_index(drop=True)
-)
-user["rating_count"] = (
-    rating.groupby("user_id")["rating"].count().reset_index(drop=True)
-)
+user["avg_rating"] = rating.groupby("user_id")["rating"].mean().reset_index(drop=True)
+user["rating_count"] = rating.groupby("user_id")["rating"].count().reset_index(drop=True)
 
 path = "ml-100k/u.genre"
 genre = [g[0] for g in pd.read_csv(path, sep="|", header=None).values]
@@ -43,9 +41,8 @@ header = [
 movie = pd.read_csv(path, sep="|", names=header, encoding="latin-1")
 movie["release_date"] = pd.to_datetime(movie["release_date"])
 
-tabs = st.tabs(
-    ["Gender", "Age", "Occupation", "Occupation average rating", "Region"]
-)
+# Display the data
+tabs = st.tabs(["Gender", "Age", "Occupation", "Occupation average rating", "Region"])
 with tabs[0]:
     male = len(user[user["gender"] == "M"].value_counts())
     female = len(user[user["gender"] == "F"].value_counts())
@@ -69,23 +66,11 @@ with tabs[2]:
     jobs = []
     for i, row in occupation.iterrows():
         jobs.append(row["occupation"])
-        male[i] = len(
-            user[
-                (user["occupation"] == row["occupation"])
-                & (user["gender"] == "Male")
-            ].value_counts()
-        )
-        female[i] = len(
-            user[
-                (user["occupation"] == row["occupation"])
-                & (user["gender"] == "Female")
-            ].value_counts()
-        )
+        male[i] = len(user[(user["occupation"] == row["occupation"]) & (user["gender"] == "Male")].value_counts())
+        female[i] = len(user[(user["occupation"] == row["occupation"]) & (user["gender"] == "Female")].value_counts())
     fig = go.Figure(
         data=[
-            go.Bar(
-                name="Male", x=jobs, y=male, text=male, textposition="auto"
-            ),
+            go.Bar(name="Male", x=jobs, y=male, text=male, textposition="auto"),
             go.Bar(
                 name="Female",
                 x=jobs,
@@ -123,15 +108,13 @@ with tabs[3]:
     st.plotly_chart(fig)
 
 
-@st.cache(allow_output_mutation=True)
+@st.cache_data
 def get_address():
     nomi = pgeocode.Nominatim("us")
     addr = [] * len(user)
     for _, row in user.iterrows():
         location = nomi.query_postal_code(row["zip_code"])
-        if not pd.isnull(location["latitude"]) and not pd.isnull(
-            location["longitude"]
-        ):
+        if not pd.isnull(location["latitude"]) and not pd.isnull(location["longitude"]):
             addr.append((location.latitude, location.longitude))
     return addr
 
@@ -230,10 +213,7 @@ for _, row in user.iterrows():
     with tabs[1]:
         avg_rating = [0] * len(year)
         for i, y in enumerate(year):
-            val = rating[
-                (rating["user_id"] == row["user_id"])
-                & (rating["timestamp"].dt.year == y)
-            ]["rating"].mean()
+            val = rating[(rating["user_id"] == row["user_id"]) & (rating["timestamp"].dt.year == y)]["rating"].mean()
             avg_rating[i] = val if not pd.isnull(val) else 0
 
         fig, ax = plt.subplots()
@@ -258,12 +238,7 @@ for _, row in user.iterrows():
     with tabs[2]:
         rating_count = [0] * len(year)
         for i, y in enumerate(year):
-            val = len(
-                rating[
-                    (rating["user_id"] == row["user_id"])
-                    & (rating["timestamp"].dt.year == y)
-                ]
-            )
+            val = len(rating[(rating["user_id"] == row["user_id"]) & (rating["timestamp"].dt.year == y)])
             rating_count[i] = val if not pd.isnull(val) else 0
 
         fig, ax = plt.subplots()
@@ -279,18 +254,12 @@ for _, row in user.iterrows():
         st.pyplot(fig)
 
     with tabs[3]:
-        df = pd.merge(
-            rating[rating["user_id"] == row["user_id"]], movie, on="item_id"
-        )
+        df = pd.merge(rating[rating["user_id"] == row["user_id"]], movie, on="item_id")
         genre_copy = genre.copy()
         genre_count = [0] * len(genre_copy)
         for i, g in enumerate(genre_copy):
             genre_count[i] = len(df[df[g] == 1])
-        genre_copy = [
-            genre_copy[i]
-            for i in range(len(genre_copy))
-            if genre_count[i] != 0
-        ]
+        genre_copy = [genre_copy[i] for i in range(len(genre_copy)) if genre_count[i] != 0]
         genre_count = [i for i in genre_count if i != 0]
         fig = go.Figure(data=[go.Pie(labels=genre_copy, values=genre_count)])
         st.plotly_chart(fig)

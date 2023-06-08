@@ -1,7 +1,6 @@
 import streamlit as st
 
-st.markdown(
-    """
+st.markdown("""
 # [MovieLens Recommend System](https://github.com/d901203/movielens-recommend-system)
 This is a movie recommendation system based on the MovieLens dataset. The system uses the Singular Value Decomposition (SVD) algorithm to predict the ratings of unseen movies for each user. The predicted ratings are then used to recommend movies to users.
 
@@ -43,5 +42,4 @@ docker run -p 8501:8501 app:latest
 ```
 
 Access the app in your browser at `http://localhost:8501`
-"""
-)
+""")
